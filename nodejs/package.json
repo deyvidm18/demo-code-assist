@@ -1,0 +1,11 @@
+{
+  "name": "legacy-warehouse-app",
+  "version": "1.0.0",
+  "description": "A legacy warehouse application with errors and bad practices",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
