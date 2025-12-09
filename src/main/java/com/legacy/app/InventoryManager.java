@@ -2,7 +2,10 @@ package com.legacy.app;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.json.simple.JSONObject;
+import java.util.Set;
+import java.util.HashSet;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 public class InventoryManager {
     public List<String> p = new ArrayList<>(); // products
@@ -15,31 +18,25 @@ public class InventoryManager {
         p.add("Widget"); pr.add(10.0); q.add(2); // Duplicate
     }
 
-    // Spaghetti code: confusing variable names, nested loops
+    // Refactored: Optimized check using HashSet (O(n))
     public void processProducts() {
         System.out.println("Processing products...");
-        
-        for (int i = 0; i < p.size(); i++) {
-            String a = p.get(i);
-            Double b = pr.get(i);
-            Integer c = q.get(i);
-            
-            boolean d = false;
-            // Inefficient O(n^2) check
-            for (int k = 0; k < p.size(); k++) {
-                if (i != k && p.get(k).equals(a)) {
-                     d = true;
-                }
-            }
+        Set<String> seenProducts = new HashSet<>();
 
-            if (d) {
-                System.out.println("Duplicate found: " + a);
-            }
+        for (int i = 0; i < p.size(); i++) {
+            String productName = p.get(i);
+            Double price = pr.get(i);
+            Integer quantity = q.get(i);
             
-            JSONObject obj = new JSONObject();
-            obj.put("name", a);
-            obj.put("val", b * c);
-            System.out.println(obj);
+            if (seenProducts.contains(productName)) {
+                System.out.println("Duplicate found: " + productName);
+            }
+            seenProducts.add(productName);
+            
+            JsonObject productJson = new JsonObject();
+            productJson.addProperty("name", productName);
+            productJson.addProperty("val", price * quantity);
+            System.out.println(productJson);
         }
     }
 
@@ -51,8 +48,19 @@ public class InventoryManager {
             total += pr.get(i) * q.get(i);
         }
 
-        // Logic Error: Subtracting tax instead of adding it (or just calculating total + tax)
-        // Assuming we wanted Total + Tax
-        return total - (total * tax); 
+        // FIXED: Logic Error (was subtracting tax)
+        return total + (total * tax); 
+    }
+
+    public String getInventoryJson() {
+        JsonArray jsonArray = new JsonArray();
+        for (int i = 0; i < p.size(); i++) {
+            JsonObject productJson = new JsonObject();
+            productJson.addProperty("name", p.get(i));
+            productJson.addProperty("price", pr.get(i));
+            productJson.addProperty("quantity", q.get(i));
+            jsonArray.add(productJson);
+        }
+        return jsonArray.toString();
     }
 }

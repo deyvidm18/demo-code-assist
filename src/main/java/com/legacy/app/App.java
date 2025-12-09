@@ -12,6 +12,6 @@ public class App {
         im.processProducts();
         
         // COMPILATION ERROR: Missing semicolon
-        System.out.println("Total Stock Value: " + im.getTotalStockValue()) 
+        System.out.println("Total Stock Value: " + im.getTotalStockValue()); 
     }
 }

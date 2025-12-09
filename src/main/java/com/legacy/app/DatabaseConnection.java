@@ -5,13 +5,18 @@ public class DatabaseConnection {
     private String dbUser = "admin";
     
     // SECURITY VULNERABILITY: Hardcoded password
-    private String dbPassword = "admin123"; 
+    // FIXED: Load password from environment variable
+    private String dbPassword = System.getenv("DB_PASSWORD"); 
 
     public void connect() {
+        if (dbPassword == null) {
+            System.err.println("Error: DB_PASSWORD environment variable not set.");
+            return;
+        }
+
         System.out.println("Connecting to database...");
         System.out.println("Using user: " + dbUser);
-        // SECURITY VULNERABILITY: Printing password to console
-        System.out.println("Using password: " + dbPassword); 
+        // FIXED: Do NOT print password to console
         System.out.println("Connected successfully (Mock)!");
     }
 }
